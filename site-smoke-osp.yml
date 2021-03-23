@@ -2,7 +2,33 @@
   gather_facts: false
   tasks:
   - name: OpenStack servers
-  - name: Curl website
+    os_server_facts:
+     cloud: openstack
+     server: 'frontend'
+    register: openstack_info
+    tags:
+      - osp.smoke
+  - debug:
+      msg: "{{ openstack_info }}"
+
+  - name: Wait until app will be up and running
+    wait_for:
+      host: "{{ item.public_v4 }}"
+      port: 80
+      delay: 10
+    with_items:
+      - "{{ openstack_info.ansible_facts.openstack_servers }}"
+
+  - name: Check load balancer frontend servers
+    uri:
+     url: "http://{{item.public_v4}}"
+     return_content: yes
+     timeout: 800
+    with_items:
+      - "{{ openstack_info.ansible_facts.openstack_servers }}"
+    register: webpage
+    tags:
+      - osp.smoke
 
   - name: Fail if 'Ansible has done its job' is not in the page content
     fail:
