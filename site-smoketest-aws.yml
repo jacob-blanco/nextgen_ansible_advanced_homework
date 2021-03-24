@@ -1,4 +1,5 @@
-- hosts: tag_AnsibleGroup_frontends
+---
+- hosts: frontends
   gather_facts: false
   tasks:
   - name: Curl website
@@ -13,4 +14,3 @@
   - name: Fail if 'Ansible has done its job' is not in the page content
     fail:
     when: "'Ansible has done its job' not in webpage.content"
-    
