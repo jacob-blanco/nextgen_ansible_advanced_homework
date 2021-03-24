@@ -3,16 +3,14 @@
   tasks:
   - name: Curl website
     uri:
-      url: "http://{{ item }}"
+      url: "http://localhost"
       return_content: yes
       status_code: 200
-    with_items:
-    - "{{ inventory_hostname }}"
     register: webpage
     tags:
     - aws.smoke
-  - debug: 
-      msg: "{{ webpage.results[0].content }}"
+
+  - debug: var=webpage.content
 
   - name: Fail if 'Ansible has done its job' is not in the page content
     fail:
