@@ -16,14 +16,8 @@
     userdata: |
       #!/bin/bash
       curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
-      curl -o /tmp/openstack.pem http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pem
       cat /tmp/openstack.pub >> /home/cloud-user/.ssh/authorized_keys
-      cat /tmp/openstack.pem >> /home/cloud-user/.ssh/authorized_keys
-      cat /tmp/openstack.pub >> /root/.ssh/openstack.pub
-      cat /tmp/openstack.pub >> /root/.ssh/authorized_keys
   with_dict: "{{ osp_servers }}"
-  tags:
-  - test.servers
 
 - name: Add floating IP to instances
   os_floating_ip:
@@ -35,6 +29,3 @@
     wait: true
     timeout: 200
   with_dict: "{{ osp_servers }}"
-  tags:
-  - test.servers
-
